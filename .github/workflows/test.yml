@@ -1,0 +1,49 @@
+name: Test
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version:
+          - "3.10"
+      fail-fast: false
+    services:
+      selenium:
+        image: selenium/standalone-chrome:105.0
+        ports:
+          - 4444:4444
+        options: --add-host host.docker.internal:host-gateway --shm-size 2g
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - uses: actions/cache@v3
+        id: cache
+        with:
+          path: ${{ env.pythonLocation }}
+          key: ${{ runner.os }}-python-${{ env.pythonLocation }}-${{ hashFiles('pyproject.toml') }}-test
+      - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: pip install -e .[test]
+      - name: Lint
+        run: bash scripts/lint.sh
+      - name: Test
+        run: bash scripts/test-selenium.sh --cov-report=xml
+        env:
+          HOSTNAME: host.docker.internal
+          SELENIUM_URL: http://localhost:4444/wd/hub
+      - name: Upload coverage
+        uses: codecov/codecov-action@v3
