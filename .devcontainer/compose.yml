@@ -1,0 +1,14 @@
+---
+services:
+  dev:
+    image: mcr.microsoft.com/vscode/devcontainers/python:0-3.11-bullseye
+    environment:
+      SELENIUM_URL: http://selenium:4444/wd/hub
+    volumes:
+      - ..:/workspaces:cached
+    command: /bin/sh -c "while sleep 1000; do :; done"
+  selenium:
+    image: selenium/standalone-chrome:111.0
+    ports:
+      - 7900:7900
+    shm_size: 2g
