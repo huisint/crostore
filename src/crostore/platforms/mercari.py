@@ -32,7 +32,7 @@ class Platform(abstract.AbstractPlatform):
 
     @property
     def _signin_url(self) -> str:
-        return "https://jp.mercari.com/signin"
+        return "https://login.jp.mercari.com/signin"
 
     @property
     def _mypage_url(self) -> str:
