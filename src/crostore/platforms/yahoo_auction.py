@@ -46,7 +46,7 @@ class Platform(abstract.AbstractPlatform):
         driver.get(self._my_auction_url)
         try:
             wait.WebDriverWait(driver, config.SELENIUM_WAIT).until(
-                expected_conditions.url_matches(f"^{self._login_url}")  # type: ignore[no-untyped-call]
+                expected_conditions.url_matches(f"^{self._login_url}")
             )
             if self._try_relogin(driver):
                 return True
@@ -65,7 +65,7 @@ class Platform(abstract.AbstractPlatform):
         driver.execute_script("arguments[0].click();", login_element)  # type: ignore[no-untyped-call]
         try:
             wait.WebDriverWait(driver, config.SELENIUM_WAIT).until(
-                expected_conditions.url_matches(f"^{self._login_url}")  # type: ignore[no-untyped-call]
+                expected_conditions.url_matches(f"^{self._login_url}")
             )
             return False
         except selenium_exceptions.TimeoutException:
