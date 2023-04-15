@@ -1,6 +1,5 @@
-from unittest import mock
-
 import pytest
+import pytest_mock
 from selenium.webdriver.remote import webdriver
 
 from crostore import exceptions
@@ -56,32 +55,34 @@ def describe_yahoo_auction() -> None:
         assert platform.home_url == "https://auctions.yahoo.co.jp/"
 
     @pytest.mark.selenium
-    @mock.patch(
-        "selenium.webdriver.support.expected_conditions.url_matches",
-        return_value=lambda _: False,
-    )
     def test_is_accessible_to_userpage_when_accessible(
-        url_matches_mock: mock.Mock,
         platform: yahoo_auction.Platform,
         driver: webdriver.WebDriver,
+        mocker: pytest_mock.MockerFixture,
     ) -> None:
-        assert platform.is_accessible_to_userpage(driver)
-        assert url_matches_mock.call_args_list == [mock.call(f"^{platform._login_url}")]
-
-    @pytest.mark.selenium
-    @mock.patch(
-        "selenium.webdriver.support.expected_conditions.url_matches",
-        side_effect=[lambda _: True, lambda _: False],
-    )
-    def test_is_accessible_to_userpage_when_relogin_succeeds(
-        url_matches_mock: mock.Mock,
-        platform: yahoo_auction.Platform,
-        driver: webdriver.WebDriver,
-    ) -> None:
+        url_matches_mock = mocker.patch(
+            "selenium.webdriver.support.expected_conditions.url_matches",
+            return_value=lambda _: False,
+        )
         assert platform.is_accessible_to_userpage(driver)
         assert url_matches_mock.call_args_list == [
-            mock.call(f"^{platform._login_url}"),
-            mock.call(f"^{platform._login_url}"),
+            mocker.call(f"^{platform._login_url}")
+        ]
+
+    @pytest.mark.selenium
+    def test_is_accessible_to_userpage_when_relogin_succeeds(
+        platform: yahoo_auction.Platform,
+        driver: webdriver.WebDriver,
+        mocker: pytest_mock.MockerFixture,
+    ) -> None:
+        url_matches_mock = mocker.patch(
+            "selenium.webdriver.support.expected_conditions.url_matches",
+            side_effect=[lambda _: True, lambda _: False],
+        )
+        assert platform.is_accessible_to_userpage(driver)
+        assert url_matches_mock.call_args_list == [
+            mocker.call(f"^{platform._login_url}"),
+            mocker.call(f"^{platform._login_url}"),
         ]
 
     @pytest.mark.selenium
@@ -121,47 +122,47 @@ def describe_yahoo_auction_item() -> None:
 
     @pytest.mark.selenium
     @pytest.mark.usefixtures("http_server")
-    @mock.patch(
-        "crostore.platforms.yahoo_auction.Item._cancel_page_url",
-        new_callable=mock.PropertyMock,
-    )
     def test_cancel_when_page_exists(
-        cancel_page_url_mock: mock.Mock,
         item: yahoo_auction.Item,
         driver: webdriver.WebDriver,
         urlbase: str,
+        mocker: pytest_mock.MockerFixture,
     ) -> None:
-        cancel_page_url_mock.return_value = urlbase + "/yahoo_auction_cancel_page.html"
+        mocker.patch(
+            "crostore.platforms.yahoo_auction.Item._cancel_page_url",
+            new_callable=mocker.PropertyMock,
+            return_value=urlbase + "/yahoo_auction_cancel_page.html",
+        )
         item.cancel(driver)
 
     @pytest.mark.selenium
     @pytest.mark.usefixtures("http_server")
     @pytest.mark.parametrize("item_id", ["abcdeFGHIJ"])
-    @mock.patch(
-        "selenium.webdriver.remote.webdriver.WebDriver.get", side_effect=Exception
-    )
     def test_cancel_when_page_does_not_exist(
-        get_mock: mock.Mock,
         item: yahoo_auction.Item,
         driver: webdriver.WebDriver,
+        mocker: pytest_mock.MockerFixture,
     ) -> None:
+        mocker.patch(
+            "selenium.webdriver.remote.webdriver.WebDriver.get", side_effect=Exception
+        )
         with pytest.raises(exceptions.ItemNotCanceledError):
             item.cancel(driver)
 
     @pytest.mark.selenium
     @pytest.mark.usefixtures("http_server")
     @pytest.mark.parametrize("item_id", ["abcdeFGHIJ"])
-    @mock.patch(
-        "crostore.platforms.yahoo_auction.Item._cancel_page_url",
-        new_callable=mock.PropertyMock,
-    )
     def test_cancel_when_suspend_button_does_not_exist(
-        cancel_page_url_mock: mock.Mock,
         item: yahoo_auction.Item,
         driver: webdriver.WebDriver,
         urlbase: str,
+        mocker: pytest_mock.MockerFixture,
     ) -> None:
-        cancel_page_url_mock.return_value = urlbase + "/empty_page.html"
+        mocker.patch(
+            "crostore.platforms.yahoo_auction.Item._cancel_page_url",
+            new_callable=mocker.PropertyMock,
+            return_value=urlbase + "/empty_page.html",
+        )
         with pytest.raises(exceptions.ItemNotCanceledError):
             item.cancel(driver)
 
