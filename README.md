@@ -4,7 +4,7 @@
 <a href="https://github.com/huisint/crostore/actions?query=workflow%3ATest" target="_blank">
     <img src="https://github.com/huisint/crostore/workflows/Test/badge.svg" alt="Test">
 </a>
-<a href="https://codecov.io/gh/wasedatakeuchilab/tlab-analysis" target="_blank">
+<a href="https://codecov.io/gh/huisint/crostore" target="_blank">
     <img src="https://img.shields.io/codecov/c/github/huisint/crostore?color=%2334D058" alt="Coverage">
 </a>
 </p>
