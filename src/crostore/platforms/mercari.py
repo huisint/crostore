@@ -32,7 +32,7 @@ class Platform(abstract.AbstractPlatform):
 
     @property
     def _signin_url(self) -> str:
-        return "https://jp.mercari.com/signin"
+        return "https://login.jp.mercari.com/signin"
 
     @property
     def _mypage_url(self) -> str:
@@ -42,7 +42,7 @@ class Platform(abstract.AbstractPlatform):
         driver.get(self._mypage_url)
         try:
             wait.WebDriverWait(driver, config.SELENIUM_WAIT).until(
-                expected_conditions.url_matches(f"^{self._signin_url}")  # type: ignore[no-untyped-call]
+                expected_conditions.url_matches(f"^{self._signin_url}")
             )
             logger.info("Relogin is required on Mercari")
             return False
