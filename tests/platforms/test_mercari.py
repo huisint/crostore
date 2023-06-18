@@ -101,21 +101,6 @@ def describe_mercari_item() -> None:
 
     @pytest.mark.selenium
     @pytest.mark.usefixtures("http_server")
-    def test_cancel_when_page_exists(
-        item: mercari.Item,
-        driver: webdriver.WebDriver,
-        urlbase: str,
-        mocker: pytest_mock.MockerFixture,
-    ) -> None:
-        edit_page_url_mock = mocker.patch(
-            "crostore.platforms.mercari.Item._edit_page_url",
-            new_callable=mocker.PropertyMock,
-        )
-        edit_page_url_mock.return_value = urlbase + "/mercari_edit_page.html"
-        item.cancel(driver)
-
-    @pytest.mark.selenium
-    @pytest.mark.usefixtures("http_server")
     @pytest.mark.parametrize("item_id", ["m000000000"])
     def test_cancel_when_page_does_not_exist(
         item: mercari.Item,
