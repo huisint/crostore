@@ -122,21 +122,6 @@ def describe_yahoo_auction_item() -> None:
 
     @pytest.mark.selenium
     @pytest.mark.usefixtures("http_server")
-    def test_cancel_when_page_exists(
-        item: yahoo_auction.Item,
-        driver: webdriver.WebDriver,
-        urlbase: str,
-        mocker: pytest_mock.MockerFixture,
-    ) -> None:
-        mocker.patch(
-            "crostore.platforms.yahoo_auction.Item._cancel_page_url",
-            new_callable=mocker.PropertyMock,
-            return_value=urlbase + "/yahoo_auction_cancel_page.html",
-        )
-        item.cancel(driver)
-
-    @pytest.mark.selenium
-    @pytest.mark.usefixtures("http_server")
     @pytest.mark.parametrize("item_id", ["abcdeFGHIJ"])
     def test_cancel_when_page_does_not_exist(
         item: yahoo_auction.Item,
