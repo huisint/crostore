@@ -70,7 +70,7 @@ class Item(abstract.AbstractItem):
 
     @property
     def _suspend_button_xpath(self) -> str:
-        return '//*[@id="main"]/form/div[2]/mer-button[2]/button'
+        return '//*[@id="main"]/form/div[2]/div[2]/button'
 
     def cancel(self, driver: webdriver.WebDriver) -> None:
         url = self._edit_page_url
@@ -102,7 +102,7 @@ class Item(abstract.AbstractItem):
                 f"Cannot click the suspend button: {self._suspend_button_xpath}"
             ) from err
         wait.WebDriverWait(driver, config.SELENIUM_WAIT).until(
-            expected_conditions.presence_of_all_elements_located
+            expected_conditions.url_to_be(self.selling_page_url)
         )
 
 
