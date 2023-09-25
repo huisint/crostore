@@ -14,7 +14,7 @@ authors = [
 keywords = []
 classifiers = []
 dependencies = [
-  "selenium~=4.11.0",
+  "selenium~=4.13.0",
 ]
 dynamic = ["version"]
 
