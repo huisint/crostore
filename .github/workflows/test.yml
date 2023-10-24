@@ -52,7 +52,7 @@ jobs:
           HOSTNAME: host.docker.internal
           SELENIUM_URL: http://localhost:4444/wd/hub
       - name: Upload coverage
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v3
   pre-commit:
     runs-on: ubuntu-latest
     steps:
