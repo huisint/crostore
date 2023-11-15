@@ -35,10 +35,10 @@ dependencies = [
 ]
 
 [tool.hatch.envs.default.scripts]
-test = "pytest --cov-report=term-missing:skip-covered src tests"
-test-selenium = "test --selenium=$SELENIUM_URL"
+test = "pytest --cov-report=term-missing:skip-covered src tests {args}"
+test-selenium = "test --selenium=$SELENIUM_URL {args}"
 # test-doc = "pytest --doctest-modules src"
-check-type = "mypy src tests"
+check-type = "mypy src tests {args}"
 
 [tool.hatch.envs.lint]
 skip-install = true
