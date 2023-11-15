@@ -1,5 +1,5 @@
 *
 !.gitignore
 !devcontainer.json
-!requirements.txt
+!create-hatch-env.sh
 !compose.yml

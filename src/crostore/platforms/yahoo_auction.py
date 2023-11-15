@@ -121,7 +121,12 @@ class Item(abstract.AbstractItem):
                 f"Cannot click the cancel button: {self._cancel_button_xpath}"
             ) from err
         wait.WebDriverWait(driver, config.SELENIUM_WAIT).until(
-            expected_conditions.presence_of_all_elements_located
+            expected_conditions.presence_of_all_elements_located(
+                (
+                    by.By.XPATH,
+                    "/html/body",
+                )
+            )
         )
 
 
