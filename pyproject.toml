@@ -14,7 +14,7 @@ authors = [
 keywords = []
 classifiers = []
 dependencies = [
-  "selenium~=4.14.0",
+  "selenium~=4.15.2",
 ]
 dynamic = ["version"]
 
@@ -22,34 +22,45 @@ dynamic = ["version"]
 Documentation = ""
 Homepage = "https://github.com/huisint/crostore"
 
-[project.optional-dependencies]
-test = [
+[tool.hatch.version]
+path = "src/crostore/__init__.py"
+
+[tool.hatch.envs.default]
+dependencies = [
   "pytest==7.4.3",
   "pytest-cov==4.1.0",
   "pytest-describe==2.1.0",
   "pytest-mock==3.12.0",
-  "mypy==1.6.1",
+  "mypy==1.7.0",
+]
+
+[tool.hatch.envs.default.scripts]
+test = "pytest --cov-report=term-missing:skip-covered src tests"
+test-selenium = "test --selenium=$SELENIUM_URL"
+# test-doc = "pytest --doctest-modules src"
+check-type = "mypy src tests"
+
+[tool.hatch.envs.lint]
+skip-install = true
+dependencies = [
   "flake8==6.1.0",
   "isort==5.12.0",
-  "black==23.10.1",
+  "black==23.11.0",
 ]
-stub = []
-doc = []
 
-[tool.hatch.version]
-path = "src/crostore/__init__.py"
-
-[tool.hatch.envs.test]
-features = ["test", "stub"]
-
-[tool.hatch.envs.test.scripts]
-test = "scripts/test.sh {args}"
-test-selenium = "test --selenium=$SELENIUM_URL"
-format = "scripts/format.sh {args}"
-lint = "scripts/lint.sh {args}"
+[tool.hatch.envs.lint.scripts]
+format = [
+  "isort src tests scripts",
+  "black src tests scripts",
+]
+lint = [
+  "isort --check-only src tests",
+  "black --check src tests",
+  "flake8 src tests",
+]
 
 [tool.hatch.envs.doc]
-features = ["doc"]
+dependencies = []
 
 [tool.hatch.envs.doc.scripts]
 
