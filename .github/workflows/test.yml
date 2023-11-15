@@ -15,10 +15,11 @@ jobs:
         python-version:
           - '3.10'
           - '3.11'
+          - '3.12'
       fail-fast: false
     services:
       selenium:
-        image: selenium/standalone-chrome:111.0
+        image: selenium/standalone-chrome:119.0
         ports:
           - 4444:4444
         options: --add-host host.docker.internal:host-gateway --shm-size 2g
