@@ -9,7 +9,7 @@ from selenium.webdriver.common import by
 from selenium.webdriver.remote import webdriver
 from selenium.webdriver.support import expected_conditions, wait
 
-from crostore import abstract, config, exceptions
+from crostore import abstract, exceptions
 
 logger = logging.getLogger(__name__)
 
@@ -42,20 +42,24 @@ class Platform(abstract.AbstractPlatform):
     def _my_auction_url(self) -> str:
         return "https://auctions.yahoo.co.jp/user/jp/show/mystatus"
 
-    def is_accessible_to_userpage(self, driver: webdriver.WebDriver) -> bool:
+    def is_accessible_to_userpage(
+        self, driver: webdriver.WebDriver, timeout: int = 60
+    ) -> bool:
+        driver.implicitly_wait(timeout)
         driver.get(self._my_auction_url)
         try:
-            wait.WebDriverWait(driver, config.SELENIUM_WAIT).until(
+            wait.WebDriverWait(driver, timeout).until(
                 expected_conditions.url_matches(f"^{self._login_url}")
             )
-            if self._try_relogin(driver):
+            if self._try_relogin(driver, timeout):
                 return True
             logger.info("Relogin is required on Yahoo!Auction")
             return False
         except selenium_exceptions.TimeoutException:
             return True
 
-    def _try_relogin(self, driver: webdriver.WebDriver) -> bool:
+    def _try_relogin(self, driver: webdriver.WebDriver, timeout: int = 60) -> bool:
+        driver.implicitly_wait(timeout)
         driver.get(self.home_url)
         try:
             login_element = driver.find_element(by.By.XPATH, self._login_button_xpath)
@@ -64,7 +68,7 @@ class Platform(abstract.AbstractPlatform):
         # To avoid ElementClickInterceptedException caused by the popup
         driver.execute_script("arguments[0].click();", login_element)  # type: ignore[no-untyped-call]
         try:
-            wait.WebDriverWait(driver, config.SELENIUM_WAIT).until(
+            wait.WebDriverWait(driver, timeout).until(
                 expected_conditions.url_matches(f"^{self._login_url}")
             )
             return False
@@ -95,7 +99,8 @@ class Item(abstract.AbstractItem):
     def _cancel_button_xpath(self) -> str:
         return "/html/body/center[1]/form/table/tbody/tr[3]/td/input"
 
-    def cancel(self, driver: webdriver.WebDriver) -> None:
+    def cancel(self, driver: webdriver.WebDriver, timeout: int = 60) -> None:
+        driver.implicitly_wait(timeout)
         try:
             driver.get(self._cancel_page_url)
             assert (
@@ -104,23 +109,23 @@ class Item(abstract.AbstractItem):
             logger.debug(f"Accessed {driver.current_url}")
         except Exception as err:
             raise exceptions.ItemNotCanceledError(
-                f"Cannot access the cancel page: {self._cancel_page_url}"
+                f"Cannot access the cancel page: {err}"
             ) from err
         try:
             cancel_element = driver.find_element(by.By.XPATH, self._cancel_button_xpath)
             logger.debug(f"{self._cancel_button_xpath} was found on the page")
         except Exception as err:  # pragma: no cover
             raise exceptions.ItemNotCanceledError(
-                f"Cannot find the cancel button: {self._cancel_button_xpath}"
+                f"Cannot find the cancel button: {err}"
             ) from err
         try:
             cancel_element.click()
             logger.debug("The cancel button was clicked")
         except Exception as err:  # pragma: no cover
             raise exceptions.ItemNotCanceledError(
-                f"Cannot click the cancel button: {self._cancel_button_xpath}"
+                f"Cannot click the cancel button: {err}"
             ) from err
-        wait.WebDriverWait(driver, config.SELENIUM_WAIT).until(
+        wait.WebDriverWait(driver, timeout).until(
             expected_conditions.presence_of_all_elements_located(
                 (
                     by.By.XPATH,
