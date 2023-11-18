@@ -9,7 +9,7 @@ from selenium.webdriver.common import by
 from selenium.webdriver.remote import webdriver, webelement
 from selenium.webdriver.support import expected_conditions, wait
 
-from crostore import abstract, config, exceptions
+from crostore import abstract, exceptions
 
 logger = logging.getLogger(__name__)
 
@@ -38,10 +38,13 @@ class Platform(abstract.AbstractPlatform):
     def _mypage_url(self) -> str:
         return "https://jp.mercari.com/mypage"
 
-    def is_accessible_to_userpage(self, driver: webdriver.WebDriver) -> bool:
+    def is_accessible_to_userpage(
+        self, driver: webdriver.WebDriver, timeout: int = 60
+    ) -> bool:
+        driver.implicitly_wait(timeout)
         driver.get(self._mypage_url)
         try:
-            wait.WebDriverWait(driver, config.SELENIUM_WAIT).until(
+            wait.WebDriverWait(driver, timeout).until(
                 expected_conditions.url_matches(f"^{self._signin_url}")
             )
             logger.info("Relogin is required on Mercari")
@@ -70,9 +73,10 @@ class Item(abstract.AbstractItem):
 
     @property
     def _suspend_button_xpath(self) -> str:
-        return '//*[@id="main"]/form/div[2]/div[2]/button'
+        return '//*[@id="main"]/form/div[3]/div[2]/button'
 
-    def cancel(self, driver: webdriver.WebDriver) -> None:
+    def cancel(self, driver: webdriver.WebDriver, timeout: int = 60) -> None:
+        driver.implicitly_wait(timeout)
         url = self._edit_page_url
         try:
             driver.get(url)
@@ -82,26 +86,32 @@ class Item(abstract.AbstractItem):
             logger.debug(f"Accessed {url}")
         except Exception as err:
             raise exceptions.ItemNotCanceledError(
-                f"Cannot access the edit page: {url}"
+                f"Cannot access the edit page: {err}"
             ) from err
         try:
             suspend_element = driver.find_element(
                 by.By.XPATH, self._suspend_button_xpath
             )
             assert isinstance(suspend_element, webelement.WebElement)
-            logger.debug(f"{self._suspend_button_xpath} was found on the page")
+            assert (
+                suspend_element.text == "出品を一時停止する"
+            ), "It might not be a suspend button"
+            logger.debug("The suspend button was found on the page")
         except Exception as err:
             raise exceptions.ItemNotCanceledError(
-                f"Cannot find the suspend button: {self._suspend_button_xpath}"
+                f"Cannot find the suspend button: {err}"
             ) from err
         try:
+            wait.WebDriverWait(driver, timeout).until(
+                expected_conditions.element_to_be_clickable(suspend_element)
+            )
             suspend_element.click()
             logger.debug("The suspend button was clicked")
         except Exception as err:  # pragma: no cover
             raise exceptions.ItemNotCanceledError(
-                f"Cannot click the suspend button: {self._suspend_button_xpath}"
+                f"Cannot click the suspend button: {err}"
             ) from err
-        wait.WebDriverWait(driver, config.SELENIUM_WAIT).until(
+        wait.WebDriverWait(driver, timeout).until(
             expected_conditions.url_to_be(self.selling_page_url)
         )
 
@@ -116,7 +126,7 @@ class Message(abstract.AbstractMessage):
 
     def to_item(self) -> Item:
         if match := re.search(self._item_id_pattern, self.body):
-            item_id = match.group(0)
+            item_id = match[0]
         else:
             raise exceptions.ItemIdNotFoundError(
                 f"Any item id is not found in the message body: {self.body}"

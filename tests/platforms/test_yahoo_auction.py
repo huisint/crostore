@@ -64,7 +64,7 @@ def describe_yahoo_auction() -> None:
             "selenium.webdriver.support.expected_conditions.url_matches",
             return_value=lambda _: False,
         )
-        assert platform.is_accessible_to_userpage(driver)
+        assert platform.is_accessible_to_userpage(driver, timeout=10)
         assert url_matches_mock.call_args_list == [
             mocker.call(f"^{platform._login_url}")
         ]
@@ -79,7 +79,7 @@ def describe_yahoo_auction() -> None:
             "selenium.webdriver.support.expected_conditions.url_matches",
             side_effect=[lambda _: True, lambda _: False],
         )
-        assert platform.is_accessible_to_userpage(driver)
+        assert platform.is_accessible_to_userpage(driver, timeout=10)
         assert url_matches_mock.call_args_list == [
             mocker.call(f"^{platform._login_url}"),
             mocker.call(f"^{platform._login_url}"),
@@ -90,7 +90,7 @@ def describe_yahoo_auction() -> None:
         platform: yahoo_auction.Platform,
         driver: webdriver.WebDriver,
     ) -> None:
-        assert not platform.is_accessible_to_userpage(driver)
+        assert not platform.is_accessible_to_userpage(driver, timeout=10)
 
     def test_create_item(
         platform: yahoo_auction.Platform, item_id: str, crostore_id: str
@@ -132,7 +132,7 @@ def describe_yahoo_auction_item() -> None:
             "selenium.webdriver.remote.webdriver.WebDriver.get", side_effect=Exception
         )
         with pytest.raises(exceptions.ItemNotCanceledError):
-            item.cancel(driver)
+            item.cancel(driver, timeout=10)
 
     @pytest.mark.selenium
     @pytest.mark.usefixtures("http_server")
@@ -149,7 +149,7 @@ def describe_yahoo_auction_item() -> None:
             return_value=urlbase + "/empty_page.html",
         )
         with pytest.raises(exceptions.ItemNotCanceledError):
-            item.cancel(driver)
+            item.cancel(driver, timeout=10)
 
 
 def describe_yahoo_auction_message() -> None:

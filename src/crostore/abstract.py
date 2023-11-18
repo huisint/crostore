@@ -34,7 +34,9 @@ class AbstractPlatform(abc.ABC):
         """The homepage URL of the platform."""
 
     @abc.abstractmethod
-    def is_accessible_to_userpage(self, driver: webdriver.WebDriver) -> bool:
+    def is_accessible_to_userpage(
+        self, driver: webdriver.WebDriver, timeout: int = 60
+    ) -> bool:
         """
         Returns true if accessible to user specific pages.
 
@@ -42,6 +44,8 @@ class AbstractPlatform(abc.ABC):
         ----------
         driver : selenium.webdriver.remote.webdriver.Webdriver
             A selenium webdriver.
+        timeout : int
+            Time to wait in seconds.
 
         Returns
         -------
@@ -107,7 +111,7 @@ class AbstractItem(abc.ABC):
         """The selling page URL of the item."""
 
     @abc.abstractmethod
-    def cancel(self, driver: webdriver.WebDriver) -> None:
+    def cancel(self, driver: webdriver.WebDriver, timeout: int = 60) -> None:
         """
         Cancels selling of the item.
 
@@ -115,6 +119,8 @@ class AbstractItem(abc.ABC):
         ----------
         driver : selenium.webdriver.remote.webdriver.Webdriver
             A selenium webdriver.
+        timeout : int
+            Time to wait in seconds.
 
         Raises
         ------
