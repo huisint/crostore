@@ -113,7 +113,7 @@ class Item(abstract.AbstractItem):
             ) from err
         try:
             cancel_element = driver.find_element(by.By.XPATH, self._cancel_button_xpath)
-            logger.debug(f"{self._cancel_button_xpath} was found on the page")
+            logger.debug("The cancel button was found on the page")
         except Exception as err:  # pragma: no cover
             raise exceptions.ItemNotCanceledError(
                 f"Cannot find the cancel button: {err}"
