@@ -62,7 +62,7 @@ def describe_mercari() -> None:
             "selenium.webdriver.support.expected_conditions.url_matches",
             return_value=lambda _: False,
         )
-        assert platform.is_accessible_to_userpage(driver)
+        assert platform.is_accessible_to_userpage(driver, timeout=10)
         assert url_matches_mock.call_args_list == [
             mocker.call(f"^{platform._signin_url}")
         ]
@@ -72,7 +72,7 @@ def describe_mercari() -> None:
         platform: mercari.Platform,
         driver: webdriver.WebDriver,
     ) -> None:
-        assert not platform.is_accessible_to_userpage(driver)
+        assert not platform.is_accessible_to_userpage(driver, timeout=10)
 
     def test_create_item(
         platform: mercari.Platform, item_id: str, crostore_id: str
@@ -111,7 +111,7 @@ def describe_mercari_item() -> None:
             "selenium.webdriver.remote.webdriver.WebDriver.get", side_effect=Exception
         )
         with pytest.raises(exceptions.ItemNotCanceledError):
-            item.cancel(driver)
+            item.cancel(driver, timeout=10)
 
     @pytest.mark.selenium
     @pytest.mark.usefixtures("http_server")
@@ -128,7 +128,7 @@ def describe_mercari_item() -> None:
             return_value=urlbase + "/empty_page.html",
         )
         with pytest.raises(exceptions.ItemNotCanceledError):
-            item.cancel(driver)
+            item.cancel(driver, timeout=10)
 
 
 def describe_mercari_message() -> None:
