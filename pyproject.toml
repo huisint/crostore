@@ -34,7 +34,7 @@ mypy = [
   "google-api-python-client-stubs==1.20.1",
 ]
 google = [
-  "google-api-python-client~=2.109.0",
+  "google-api-python-client~=2.114.0",
 ]
 
 [tool.hatch.version]
