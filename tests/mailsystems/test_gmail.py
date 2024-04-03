@@ -5,7 +5,6 @@ import typing as t
 
 import pytest
 import pytest_mock
-
 from crostore import abstract
 from crostore.mailsystems import gmail
 from crostore.platforms import mercari, yahoo_auction

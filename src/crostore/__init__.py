@@ -1,7 +1,10 @@
 __version__ = "0.1.0"
 
 
-from . import datasystems, exceptions, mailsystems, platforms
+from . import datasystems as datasystems
+from . import exceptions as exceptions
+from . import mailsystems as mailsystems
+from . import platforms as platforms
 from .abstract import AbstractDataSystem as AbstractDataSystem
 from .abstract import AbstractItem as AbstractItem
 from .abstract import AbstractMailSystem as AbstractMailSystem

@@ -30,7 +30,10 @@ def _(platform: platforms.mercari.Platform) -> str:
 
 @get_sold_mail_query.register
 def _(platform: platforms.yahoo_auction.Platform) -> str:
-    return f"from:({platform.email})" + ' AND {subject:("Yahoo!オークション - 終了（落札者あり）")}'
+    return (
+        f"from:({platform.email})"
+        + ' AND {subject:("Yahoo!オークション - 終了（落札者あり）")}'
+    )
 
 
 def build(creds: credentials.Credentials) -> resources.GmailResource:
@@ -67,7 +70,8 @@ def list_label(
     -------
     list[Label]
         A list of Label objects.
-        See also https://developers.google.com/gmail/api/reference/rest/v1/users.labels#Label for Label.
+        See also https://developers.google.com/gmail/api/reference/rest/v1/users.labels#Label
+        for Label.
 
     See also
     --------
@@ -92,13 +96,15 @@ def create_label(
         The user's email address.
     label : Label
         The label to create.
-        See also https://developers.google.com/gmail/api/reference/rest/v1/users.labels#Label for Label.
+        See also https://developers.google.com/gmail/api/reference/rest/v1/users.labels#Label
+        for Label.
 
     Returns
     -------
     Label
         The create Label object.
-        See also https://developers.google.com/gmail/api/reference/rest/v1/users.labels#Label for Label.
+        See also https://developers.google.com/gmail/api/reference/rest/v1/users.labels#Label
+        for Label.
 
     See also
     --------
@@ -150,7 +156,8 @@ def list_message(
     -------
     messages : list[Message]
         A list of Message objects.
-        See also https://developers.google.com/gmail/api/reference/rest/v1/users.messages#Message for Message.
+        See also https://developers.google.com/gmail/api/reference/rest/v1/users.messages#Message
+        for Message.
     next_page_token : str
         The token to retrieve the next page.
     result_size_estimate : int
@@ -206,7 +213,8 @@ def get_message(
     -------
     Message
         The retrieved Message object.
-        See also https://developers.google.com/gmail/api/reference/rest/v1/users.messages#Message for Message.
+        See also https://developers.google.com/gmail/api/reference/rest/v1/users.messages#Message
+        for Message.
 
     See Also
     --------
@@ -247,7 +255,8 @@ def modify_message(
     -------
     Message
         The retrieved Message object.
-        See also https://developers.google.com/gmail/api/reference/rest/v1/users.messages#Message for Message.
+        See also https://developers.google.com/gmail/api/reference/rest/v1/users.messages#Message
+        for Message.
 
     See Also
     --------

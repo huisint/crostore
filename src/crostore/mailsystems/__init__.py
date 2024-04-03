@@ -1,1 +1,1 @@
-from .gmail import GmailMailSystem
+from .gmail import GmailMailSystem as GmailMailSystem
