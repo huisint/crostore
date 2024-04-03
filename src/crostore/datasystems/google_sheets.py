@@ -156,7 +156,10 @@ class GoogleSheetsDataSystem(abstract.AbstractDataSystem):
             )
 
         rsc = build(self.creds)
-        update_range = f"{self.sheet_name}!{self.platform_to_column[item.platform]}{item_index + 1}"
+        update_range = (
+            f"{self.sheet_name}!"
+            f"{self.platform_to_column[item.platform]}{item_index + 1}"
+        )
         rsc.spreadsheets().values().update(
             spreadsheetId=self.sheet_id,
             range=update_range,
@@ -179,7 +182,10 @@ class GoogleSheetsDataSystem(abstract.AbstractDataSystem):
             )
 
         rsc = build(self.creds)
-        delete_range = f"{self.sheet_name}!{self.platform_to_column[item.platform]}{item_index + 1}"
+        delete_range = (
+            f"{self.sheet_name}!"
+            f"{self.platform_to_column[item.platform]}{item_index + 1}"
+        )
         rsc.spreadsheets().values().clear(
             spreadsheetId=self.sheet_id,
             range=delete_range,

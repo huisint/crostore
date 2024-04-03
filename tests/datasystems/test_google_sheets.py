@@ -2,10 +2,10 @@ import typing as t
 
 import pytest
 import pytest_mock
-
 from crostore import abstract
 from crostore.datasystems import google_sheets
 from crostore.platforms import mercari, yahoo_auction
+
 from tests import FixtureRequest
 
 if t.TYPE_CHECKING:  # pragma: no cover
@@ -193,7 +193,10 @@ def describe_google_sheets_data_system() -> None:
         )
         data_system.update(item)
         item_index = crostore_id.index(item.crostore_id)
-        update_range = f"{data_system.sheet_name}!{data_system.platform_to_column[item.platform]}{item_index + 1}"
+        update_range = (
+            f"{data_system.sheet_name}!"
+            f"{data_system.platform_to_column[item.platform]}{item_index + 1}"
+        )
         update_mock = build_mock.return_value.spreadsheets().values().update
         update_mock.assert_called_once_with(
             spreadsheetId=data_system.sheet_id,
@@ -267,7 +270,10 @@ def describe_google_sheets_data_system() -> None:
         )
         data_system.delete(item)
         item_index = crostore_id.index(item.crostore_id)
-        delete_range = f"{data_system.sheet_name}!{data_system.platform_to_column[item.platform]}{item_index + 1}"
+        delete_range = (
+            f"{data_system.sheet_name}!"
+            f"{data_system.platform_to_column[item.platform]}{item_index + 1}"
+        )
         clear_mock = build_mock.return_value.spreadsheets().values().clear
         clear_mock.assert_called_once_with(
             spreadsheetId=data_system.sheet_id,

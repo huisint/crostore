@@ -1,9 +1,9 @@
 import pytest
 import pytest_mock
-from selenium.webdriver.remote import webdriver
-
 from crostore import exceptions
 from crostore.platforms import yahoo_auction
+from selenium.webdriver.remote import webdriver
+
 from tests import FixtureRequest
 
 

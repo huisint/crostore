@@ -1,1 +1,1 @@
-from .google_sheets import GoogleSheetsDataSystem
+from .google_sheets import GoogleSheetsDataSystem as GoogleSheetsDataSystem

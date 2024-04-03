@@ -4,9 +4,9 @@ from collections import abc
 from http import server
 
 import pytest
+from crostore import config
 from selenium import webdriver
 
-from crostore import config
 from tests import FixtureRequest
 
 HOSTNAME = os.environ.get("HOSTNAME", "localhost")
