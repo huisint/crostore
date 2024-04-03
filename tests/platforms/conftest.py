@@ -43,7 +43,7 @@ def driver(request: FixtureRequest[str]) -> abc.Generator[webdriver.Remote, None
     match request.param:
         case "chrome":
             options = webdriver.ChromeOptions()
-            options.add_argument("--headless")  # type: ignore[no-untyped-call]
+            options.add_argument("--headless")
         case _:
             raise NotImplementedError
     driver = webdriver.Remote(selenium_url, options=options)
