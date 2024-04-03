@@ -1,6 +1,6 @@
 ---
 services:
-  dev:
+  main:
     image: mcr.microsoft.com/vscode/devcontainers/python:3.12
     environment:
       SELENIUM_URL: http://selenium:4444/wd/hub
