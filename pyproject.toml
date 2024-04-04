@@ -36,7 +36,7 @@ test = [
 ]
 google = [
   "google-api-python-client~=2.125.0",
-  "google-api-python-client-stubs==1.25.0",
+  "google-api-python-client-stubs~=1.25.0",
 ]
 
 [tool.hatch.version]
@@ -50,14 +50,6 @@ test = "pytest --cov-report=term-missing:skip-covered src tests {args}"
 test-selenium = "test --selenium=$SELENIUM_URL {args}"
 # test-doc = "pytest --doctest-modules src"
 check-type = "mypy src tests {args}"
-
-[tool.hatch.envs.lint]
-skip-install = true
-dependencies = [
-  "black==23.11.0",
-  "isort==5.12.0",
-  "flake8==6.1.0",
-]
 
 [tool.hatch.envs.doc]
 dependencies = []
