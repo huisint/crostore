@@ -35,7 +35,7 @@ test = [
   "pytest-mock==3.14.0",
 ]
 google = [
-  "google-api-python-client~=2.125.0",
+  "google-api-python-client~=2.128.0",
   "google-api-python-client-stubs~=1.25.0",
 ]
 
