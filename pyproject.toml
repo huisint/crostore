@@ -17,7 +17,7 @@ maintainers = [
 # keywords = []
 # classifiers = []
 dependencies = [
-  "selenium~=4.19.0",
+  "selenium~=4.22.0",
 ]
 dynamic = ["version"]
 
